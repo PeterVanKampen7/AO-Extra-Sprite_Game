@@ -63,9 +63,18 @@ h1
 	position: relative;
 }
 
-#gameContainer > img
+#fieldLayer > img
 {
 	position: relative;
+}
+
+#fieldLayer
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;;
+	width: 506px;
+	height: 520px;
 }
 
 #playerLayer
@@ -104,4 +113,11 @@ h1
 {
 	position: absolute;
 	transition: width 2s, height 2s, transform 2s, ease 1.5s;
+	z-index: 3;
+}
+
+#tokenLayer > #bug
+{
+	position: absolute;
+	transition: ease 0.5s;
 }

@@ -5,12 +5,16 @@ var level;
 var player;
 var key;
 var star;
+var bug;
 var keyCheck;
 var keyTopLocation;
 var keyLeftLocation;
 var starTopLocation;
 var starLeftLocation;
+var bugTopLocation;
+var bugLeftLocation;
 var start = false;
+var path;
 
 document.addEventListener("keyup", function(event){
 	if(!start)
@@ -69,7 +73,7 @@ document.addEventListener("keyup", function(event){
 	}
 });
 
-var container = document.getElementById("gameContainer");
+var container = document.getElementById("fieldLayer");
 var playerLayer = document.getElementById("playerLayer");
 var tokens = document.getElementById("tokenLayer");
 
@@ -223,6 +227,56 @@ var field2 = [
 	]
 ];
 
+var field2Collision = [
+	[	//first row
+		false, 
+		true, 
+		false, 
+		false, 
+		false
+	],
+
+	[	//second row
+		false, 
+		true,
+		false, 
+		true, 
+		false
+	],
+
+	[	//third row
+		true, 
+		true, 
+		true, 
+		true, 
+		true
+	],
+
+	[	//fourth row
+		false, 
+		false, 
+		true, 
+		false, 
+		true
+	],
+
+	[	//fifth row
+		false, 
+		false, 
+		false, 
+		false, 
+		true
+	],
+
+	[	//sixth row
+		true, 
+		true, 
+		true, 
+		true, 
+		true
+	]
+];
+
 function level1()
 {	
 	level = 1;
@@ -240,18 +294,23 @@ function level1()
 
 function level2()
 {
-	container = document.getElementById("gameContainer");
-	playerLayer = document.getElementById("playerLayer");
-	tokens = document.getElementById("tokenLayer");
 	level = 2;
-	container.innerHTML = '<div id="playerLayer"></div><div id="tokenLayer"></div>';
+	container.innerHTML = '';
+	playerLayer.innerHTML = '';
+	tokens.innerHTML = '';
 	leftLocation = 1;
 	topLocation = 0;
 	drawPlayer(leftLocation, topLocation);
 	drawToken(3, 1, "key");
 	drawToken(0, 4, "star");
+	drawPatrol(0, 2);
+	startPatrol();
 	drawField(field2);
-	fieldCollision = field1Collision;
+	fieldCollision = field2Collision;
+	player = document.getElementById("player");
+	key = document.getElementById("key");
+	star = document.getElementById("star");
+	bug = document.getElementById("bug");
 }
 
 function drawField(field)
@@ -309,16 +368,62 @@ function drawToken(x, y, token)
 	tokens.innerHTML += out;
 }
 
+function drawPatrol(x, y)
+{
+	bugTopLocation = y;
+	bugLeftLocation = x;
+	var outY = -65 + (y * 86);
+	var outX = x * 101;
+	var out = '<img src="images/Enemy Bug.png" alt="Enemy Bug" class="token" id="bug"';
+	out += 'style="top:'+outY+'px; ';
+	out += 'left: '+outX+'px">';
+	tokens.innerHTML += out;
+}
+
+function startPatrol()
+{
+	var move = "right"
+	path = setInterval(function(){
+
+		if(move === "right" && bugLeftLocation != 4)
+		{
+			bugLeftLocation++;
+		}
+		else if(move === "right" && bugLeftLocation == 4)
+		{
+			bug.style.transform = "scaleX(-1)";
+			move = "left";
+		}
+		else if(move === "left" && bugLeftLocation != 0)
+		{
+			bugLeftLocation--;
+		}
+		else if(move === "left" && bugLeftLocation == 0)
+		{
+			bug.style.transform = "scaleX(1)";
+			move = "right";
+		}
+
+		var outX = bugLeftLocation * 101;
+		bug.style.left = outX+"px";
+		checkTokenCollision();
+	}, 500)
+}
+
 function checkTokenCollision()
 {
 	if(topLocation == keyTopLocation && leftLocation == keyLeftLocation)
 	{
 		keyCheck = true;
-		fieldCollision[5][0] = true;
+		fieldCollision[starTopLocation][starLeftLocation] = true;
 		key.style.width = "50px";
 		key.style.height = "80px";
 		key.style.left = "0px";
 		key.style.top = "-80px";
+	}
+	else if(topLocation == bugTopLocation && leftLocation == bugLeftLocation)
+	{
+		death();
 	}
 	else if(topLocation == starTopLocation && leftLocation == starLeftLocation)
 	{
@@ -328,7 +433,15 @@ function checkTokenCollision()
 		star.style.height = "600px";
 		star.style.transform = "rotate(360deg)";
 		setTimeout(function(){
-			level2();
+			if(level == 1)
+			{
+				level2();
+			}
+			else if(level == 2)
+			{
+				clearInterval(path);
+				level2();
+			}
 		}, 2500);		
 	}
 }
@@ -355,4 +468,9 @@ function block(row, type)
 	}
 
 	return out;
+}
+
+function death()
+{
+
 }
