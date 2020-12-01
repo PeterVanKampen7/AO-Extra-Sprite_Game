@@ -6,7 +6,6 @@ var player;
 var key;
 var star;
 var bug;
-var keyCheck;
 var keyTopLocation;
 var keyLeftLocation;
 var starTopLocation;
@@ -414,7 +413,6 @@ function checkTokenCollision()
 {
 	if(topLocation == keyTopLocation && leftLocation == keyLeftLocation)
 	{
-		keyCheck = true;
 		fieldCollision[starTopLocation][starLeftLocation] = true;
 		key.style.width = "50px";
 		key.style.height = "80px";
