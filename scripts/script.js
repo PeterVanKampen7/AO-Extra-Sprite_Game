@@ -1,9 +1,25 @@
 var topLocation = 0;
 var leftLocation = 0;
 var fieldCollision;
+var level;
+var player;
+var key;
+var star;
+var keyCheck;
+var keyTopLocation;
+var keyLeftLocation;
+var starTopLocation;
+var starLeftLocation;
+var start = false;
 
-document.addEventListener("keydown", function(event){
-	if(event.key.toLowerCase() == "w")
+document.addEventListener("keyup", function(event){
+	if(!start)
+	{
+		document.getElementById("startScreen").style.display = "none";
+		level1();
+		start = true;
+	}
+	else if(event.key.toLowerCase() == "w")
 	{
 		if(topLocation != 0)
 		{
@@ -11,6 +27,7 @@ document.addEventListener("keydown", function(event){
 			{
 				topLocation -= 1;
 				updatePlayer();
+				checkTokenCollision();
 			}		
 		}	
 	}
@@ -22,6 +39,7 @@ document.addEventListener("keydown", function(event){
 			{
 				leftLocation -= 1;
 				updatePlayer();
+				checkTokenCollision();
 			}			
 		}	
 	}
@@ -33,6 +51,7 @@ document.addEventListener("keydown", function(event){
 			{
 				topLocation += 1;
 				updatePlayer();
+				checkTokenCollision();
 			}		
 		}	
 	}
@@ -44,15 +63,15 @@ document.addEventListener("keydown", function(event){
 			{
 				leftLocation += 1;
 				updatePlayer();
+				checkTokenCollision();
 			}
 		}	
 	}
 });
 
-
-
 var container = document.getElementById("gameContainer");
-var tokens = document.getElementById("playerLayer");
+var playerLayer = document.getElementById("playerLayer");
+var tokens = document.getElementById("tokenLayer");
 
 var field1 = [
 	[	//first row
@@ -91,7 +110,7 @@ var field1 = [
 		block(4, "stone"), 
 		block(4, "grass"), 
 		block(4, "grass"), 
-		block(4, "grass"), 
+		block(4, "stone"), 
 		block(4, "grass")
 	],
 
@@ -102,7 +121,7 @@ var field1 = [
 		block(5, "grass"), 
 		block(5, "grass")
 	]
-]
+];
 
 var field1Collision = [
 	[	//first row
@@ -141,26 +160,98 @@ var field1Collision = [
 		true, 
 		false, 
 		false, 
-		false, 
+		true, 
 		false
 	],
 
 	[	//sixth row
-		true, 
+		false, 
 		false, 
 		false, 
 		false, 
 		false
 	]
-]
+];
+
+var field2 = [
+	[	//first row
+		block(0, "grass"), 
+		block(0, "stone"), 
+		block(0, "grass"), 
+		block(0, "grass"), 
+		block(0, "grass")
+	],
+
+	[	//second row
+		block(1, "grass"), 
+		block(1, "stone"),
+		block(1, "grass"), 
+		block(1, "stone"), 
+		block(1, "grass")
+	],
+
+	[	//third row
+		block(2, "stone"), 
+		block(2, "stone"), 
+		block(2, "stone"), 
+		block(2, "stone"), 
+		block(2, "stone")
+	],
+
+	[	//fourth row
+		block(3, "grass"), 
+		block(3, "grass"), 
+		block(3, "stone"), 
+		block(3, "grass"), 
+		block(3, "stone")
+	],
+
+	[	//fifth row
+		block(4, "stone"), 
+		block(4, "grass"), 
+		block(4, "grass"), 
+		block(4, "grass"), 
+		block(4, "stone")
+	],
+
+	[	//sixth row
+		block(5, "stone"), 
+		block(5, "stone"), 
+		block(5, "stone"), 
+		block(5, "stone"), 
+		block(5, "stone")
+	]
+];
 
 function level1()
 {	
+	level = 1;
 	leftLocation = 1;
 	topLocation = 0;
 	drawPlayer(leftLocation, topLocation);
+	drawToken(3, 4, "key");
+	drawToken(0, 5, "star");
 	drawField(field1);
-	fieldCollision = field1Collision
+	fieldCollision = field1Collision;
+	player = document.getElementById("player");
+	key = document.getElementById("key");
+	star = document.getElementById("star");	
+}
+
+function level2()
+{
+	container = document.getElementById("gameContainer");
+	playerLayer = document.getElementById("playerLayer");
+	tokens = document.getElementById("tokenLayer");
+	level = 2;
+	container.innerHTML = '<div id="playerLayer"></div><div id="tokenLayer"></div>';
+	leftLocation = 1;
+	topLocation = 0;
+	drawPlayer(leftLocation, topLocation);
+	drawToken(3, 1, "key");
+	drawToken(0, 4, "star");
+	drawField(field2);
+	fieldCollision = field1Collision;
 }
 
 function drawField(field)
@@ -182,7 +273,7 @@ function drawPlayer(x, y)
 	var outX = x * 101;
 	out += 'left: '+outX+'px">';
 
-	tokens.innerHTML = out;
+	playerLayer.innerHTML = out;
 }
 
 function updatePlayer()
@@ -192,6 +283,54 @@ function updatePlayer()
 
 	player.style.top = outY + "px";
 	player.style.left = outX + "px";
+}
+
+function drawToken(x, y, token)
+{
+	var outY = -65 + (y * 86);
+	var outX = x * 101;
+	var out;
+
+	if(token === "key")
+	{
+		out = '<img src="images/Key.png" alt="Key" class="token" id="key"';
+		keyTopLocation = y;
+		keyLeftLocation = x;
+	}
+	else if(token === "star")
+	{
+		out = '<img src="images/Star.png" alt="Star" class="token" id="star"';
+		starTopLocation = y;
+		starLeftLocation = x;
+	}
+
+	out += 'style="top:'+outY+'px; ';
+	out += 'left: '+outX+'px">';
+	tokens.innerHTML += out;
+}
+
+function checkTokenCollision()
+{
+	if(topLocation == keyTopLocation && leftLocation == keyLeftLocation)
+	{
+		keyCheck = true;
+		fieldCollision[5][0] = true;
+		key.style.width = "50px";
+		key.style.height = "80px";
+		key.style.left = "0px";
+		key.style.top = "-80px";
+	}
+	else if(topLocation == starTopLocation && leftLocation == starLeftLocation)
+	{
+		star.style.left = "60px";
+		star.style.top = "-100px";	
+		star.style.width = "400px";
+		star.style.height = "600px";
+		star.style.transform = "rotate(360deg)";
+		setTimeout(function(){
+			level2();
+		}, 2500);		
+	}
 }
 
 function block(row, type)
@@ -217,6 +356,3 @@ function block(row, type)
 
 	return out;
 }
-
-level1();
-var player = document.getElementById("player");
