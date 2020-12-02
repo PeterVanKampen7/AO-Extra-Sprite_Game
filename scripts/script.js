@@ -19,7 +19,7 @@ document.addEventListener("keyup", function(event){
 	if(gameState == 0)
 	{
 		document.getElementById("startScreen").style.display = "none";
-		level2();
+		level1();
 		gameState++;
 	}
 	else if(gameState == 1)
@@ -28,11 +28,17 @@ document.addEventListener("keyup", function(event){
 		{
 			if(topLocation != 0)
 			{
-				if(fieldCollision[topLocation-1][leftLocation])
+				if(fieldCollision[topLocation-1][leftLocation] == 1)
 				{
 					topLocation -= 1;
 					updatePlayer();
 					checkTokenCollision();
+				}
+				else if(fieldCollision[topLocation-1][leftLocation] == 3)
+				{
+					topLocation -= 1;
+					updatePlayer();
+					death();
 				}		
 			}	
 		}
@@ -40,11 +46,17 @@ document.addEventListener("keyup", function(event){
 		{
 			if(leftLocation != 0)
 			{
-				if(fieldCollision[topLocation][leftLocation-1])
+				if(fieldCollision[topLocation][leftLocation-1] == 1)
 				{
 					leftLocation -= 1;
 					updatePlayer();
 					checkTokenCollision();
+				}
+				else if(fieldCollision[topLocation][leftLocation-1] == 3)
+				{
+					leftLocation -= 1;
+					updatePlayer();
+					death();
 				}			
 			}	
 		}
@@ -52,11 +64,17 @@ document.addEventListener("keyup", function(event){
 		{
 			if(topLocation != 5)
 			{
-				if(fieldCollision[topLocation+1][leftLocation])
+				if(fieldCollision[topLocation+1][leftLocation] == 1)
 				{
 					topLocation += 1;
 					updatePlayer();
 					checkTokenCollision();
+				}
+				else if(fieldCollision[topLocation+1][leftLocation] == 3)
+				{
+					topLocation += 1;
+					updatePlayer();
+					death();
 				}		
 			}	
 		}
@@ -64,11 +82,17 @@ document.addEventListener("keyup", function(event){
 		{
 			if(leftLocation != 4)
 			{
-				if(fieldCollision[topLocation][leftLocation+1])
+				if(fieldCollision[topLocation][leftLocation+1] == 1)
 				{
 					leftLocation += 1;
 					updatePlayer();
 					checkTokenCollision();
+				}
+				else if(fieldCollision[topLocation][leftLocation+1] == 3)
+				{
+					leftLocation += 1;
+					updatePlayer();
+					death();				
 				}
 			}	
 		}
@@ -137,51 +161,51 @@ var field1 = [
 
 var field1Collision = [
 	[	//first row
-		false, 
-		true, 
-		false, 
-		false, 
-		false
+		0, 
+		1, 
+		0, 
+		0, 
+		0
 	],
 
 	[	//second row
-		false, 
-		true,
-		true, 
-		true, 
-		false
+		0, 
+		1,
+		1, 
+		1, 
+		0
 	],
 
 	[	//third row
-		false, 
-		false, 
-		false, 
-		true, 
-		false
+		0, 
+		0, 
+		0, 
+		1, 
+		0
 	],
 
 	[	//fourth row
-		true, 
-		true, 
-		true, 
-		true, 
-		false
+		1, 
+		1, 
+		1, 
+		1, 
+		0
 	],
 
 	[	//fifth row
-		true, 
-		false, 
-		false, 
-		true, 
-		false
+		1, 
+		0, 
+		0, 
+		1, 
+		0
 	],
 
 	[	//sixth row
-		false, 
-		false, 
-		false, 
-		false, 
-		false
+		0, 
+		0, 
+		0, 
+		0, 
+		0
 	]
 ];
 
@@ -237,51 +261,151 @@ var field2 = [
 
 var field2Collision = [
 	[	//first row
-		false, 
-		true, 
-		false, 
-		false, 
-		false
+		0, 
+		1, 
+		0, 
+		0, 
+		0
 	],
 
 	[	//second row
-		false, 
-		true,
-		false, 
-		true, 
-		false
+		0, 
+		1,
+		0, 
+		1, 
+		0
 	],
 
 	[	//third row
-		true, 
-		true, 
-		true, 
-		true, 
-		true
+		1, 
+		1, 
+		1, 
+		1, 
+		1
 	],
 
 	[	//fourth row
-		false, 
-		false, 
-		true, 
-		false, 
-		true
+		0, 
+		0, 
+		1, 
+		0, 
+		1
 	],
 
 	[	//fifth row
-		false, 
-		false, 
-		false, 
-		false, 
-		true
+		0, 
+		0, 
+		0, 
+		0, 
+		1
 	],
 
 	[	//sixth row
-		true, 
-		true, 
-		true, 
-		true, 
-		true
+		1, 
+		1, 
+		1, 
+		1, 
+		1
+	]
+];
+
+var field3 = [
+	[	//first row
+		block(0, "wood"), 
+		block(0, "water"), 
+		block(0, "water"), 
+		block(0, "water"), 
+		block(0, "water")
+	],
+
+	[	//second row
+		block(1, "wood"), 
+		block(1, "wood"),
+		block(1, "wood"), 
+		block(1, "wood"), 
+		block(1, "water")
+	],
+
+	[	//third row
+		block(2, "water"), 
+		block(2, "wood"), 
+		block(2, "water"), 
+		block(2, "water"), 
+		block(2, "water")
+	],
+
+	[	//fourth row
+		block(3, "wood"), 
+		block(3, "wood"), 
+		block(3, "wood"), 
+		block(3, "wood"), 
+		block(3, "wood")
+	],
+
+	[	//fifth row
+		block(4, "water"), 
+		block(4, "water"), 
+		block(4, "wood"), 
+		block(4, "water"), 
+		block(4, "water")
+	],
+
+	[	//sixth row
+		block(5, "water"), 
+		block(5, "water"), 
+		block(5, "wood"), 
+		block(5, "water"), 
+		block(5, "water")
+	]
+];
+
+var field3Collision = [
+	[	//first row
+		1, 
+		3, 
+		3, 
+		3, 
+		3
+	],
+
+	[	//second row
+		1, 
+		1,
+		1, 
+		1, 
+		3
+	],
+
+	[	//third row
+		3, 
+		1, 
+		3, 
+		3, 
+		3
+	],
+
+	[	//fourth row
+		1, 
+		1, 
+		1, 
+		1, 
+		1
+	],
+
+	[	//fifth row
+		3, 
+		3, 
+		1, 
+		3, 
+		3
+	],
+
+	[	//sixth row
+		3, 
+		3, 
+		0, 
+		3, 
+		3
 	]
 ];
 
@@ -315,6 +439,27 @@ function level2()
 	startPatrol();
 	drawField(field2);
 	fieldCollision = field2Collision;
+	player = document.getElementById("player");
+	key = document.getElementById("key");
+	star = document.getElementById("star");
+	bug = document.getElementById("bug");
+}
+
+function level3()
+{
+	level = 3;
+	container.innerHTML = '';
+	playerLayer.innerHTML = '';
+	tokens.innerHTML = '';
+	leftLocation = 0;
+	topLocation = 0;
+	drawPlayer(leftLocation, topLocation);
+	drawToken(3, 1, "key");
+	drawToken(2, 5, "star");
+	drawField(field3);
+	drawPatrol(0, 3);
+	startPatrol();
+	fieldCollision = field3Collision;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
 	star = document.getElementById("star");
@@ -422,7 +567,7 @@ function checkTokenCollision()
 {
 	if(topLocation == keyTopLocation && leftLocation == keyLeftLocation)
 	{
-		fieldCollision[starTopLocation][starLeftLocation] = true;
+		fieldCollision[starTopLocation][starLeftLocation] = 1;
 		key.style.width = "50px";
 		key.style.height = "80px";
 		key.style.left = "0px";
@@ -447,7 +592,12 @@ function checkTokenCollision()
 			else if(level == 2)
 			{
 				clearInterval(path);
-				level2();
+				level3();
+			}
+			else if(level == 3)
+			{
+				clearInterval(path);
+				level3();
 			}
 		}, 2500);		
 	}
@@ -458,6 +608,9 @@ function block(row, type)
 	var grass = '<img src="images/Grass Block.png" alt="Grass Block" class="grass"';
 	var dirt = '<img src="images/Dirt Block.png" alt="Dirt Block" class="dirt"';
 	var stone = '<img src="images/Stone Block.png" alt="Stone Block" class="stone"';
+	var water = '<img src="images/Water Block.png" alt="Water Block" class="water"';
+	var wood = '<img src="images/Wood Block.png" alt="Wood Block" class="wood"';
+
 
 	var out;
 	
@@ -472,6 +625,14 @@ function block(row, type)
 	else if(type == "stone")
 	{
 		out = stone + 'style="top:'+((row*-90)-45)+'px">';
+	}
+	else if(type == "water")
+	{
+		out = water + 'style="top:'+((row*-90)-45)+'px">';
+	}
+	else if(type == "wood")
+	{
+		out = wood + 'style="top:'+((row*-90)-45)+'px">';
 	}
 
 	return out;
