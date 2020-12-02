@@ -12,63 +12,72 @@ var starTopLocation;
 var starLeftLocation;
 var bugTopLocation;
 var bugLeftLocation;
-var start = false;
+var gameState = 0;
 var path;
 
 document.addEventListener("keyup", function(event){
-	if(!start)
+	if(gameState == 0)
 	{
 		document.getElementById("startScreen").style.display = "none";
-		level1();
-		start = true;
+		level2();
+		gameState++;
 	}
-	else if(event.key.toLowerCase() == "w")
+	else if(gameState == 1)
 	{
-		if(topLocation != 0)
+		if(event.key.toLowerCase() == "w")
 		{
-			if(fieldCollision[topLocation-1][leftLocation])
+			if(topLocation != 0)
 			{
-				topLocation -= 1;
-				updatePlayer();
-				checkTokenCollision();
-			}		
-		}	
+				if(fieldCollision[topLocation-1][leftLocation])
+				{
+					topLocation -= 1;
+					updatePlayer();
+					checkTokenCollision();
+				}		
+			}	
+		}
+		else if(event.key.toLowerCase() == "a")
+		{
+			if(leftLocation != 0)
+			{
+				if(fieldCollision[topLocation][leftLocation-1])
+				{
+					leftLocation -= 1;
+					updatePlayer();
+					checkTokenCollision();
+				}			
+			}	
+		}
+		else if(event.key.toLowerCase() == "s")
+		{
+			if(topLocation != 5)
+			{
+				if(fieldCollision[topLocation+1][leftLocation])
+				{
+					topLocation += 1;
+					updatePlayer();
+					checkTokenCollision();
+				}		
+			}	
+		}
+		else if(event.key.toLowerCase() == "d")
+		{
+			if(leftLocation != 4)
+			{
+				if(fieldCollision[topLocation][leftLocation+1])
+				{
+					leftLocation += 1;
+					updatePlayer();
+					checkTokenCollision();
+				}
+			}	
+		}
 	}
-	else if(event.key.toLowerCase() == "a")
+	else if(gameState == 2)
 	{
-		if(leftLocation != 0)
-		{
-			if(fieldCollision[topLocation][leftLocation-1])
-			{
-				leftLocation -= 1;
-				updatePlayer();
-				checkTokenCollision();
-			}			
-		}	
-	}
-	else if(event.key.toLowerCase() == "s")
-	{
-		if(topLocation != 5)
-		{
-			if(fieldCollision[topLocation+1][leftLocation])
-			{
-				topLocation += 1;
-				updatePlayer();
-				checkTokenCollision();
-			}		
-		}	
-	}
-	else if(event.key.toLowerCase() == "d")
-	{
-		if(leftLocation != 4)
-		{
-			if(fieldCollision[topLocation][leftLocation+1])
-			{
-				leftLocation += 1;
-				updatePlayer();
-				checkTokenCollision();
-			}
-		}	
+		setTimeout(function(){
+			location.reload();
+		}, 750);
 	}
 });
 
@@ -470,5 +479,7 @@ function block(row, type)
 
 function death()
 {
-
+	gameState++;
+	clearInterval(path);
+	document.getElementById("gameOver").style.display = "block";
 }
