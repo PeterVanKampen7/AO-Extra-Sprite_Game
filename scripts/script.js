@@ -19,7 +19,7 @@ document.addEventListener("keyup", function(event){
 	if(gameState == 0)
 	{
 		document.getElementById("startScreen").style.display = "none";
-		level1();
+		level2();
 		gameState++;
 	}
 	else if(gameState == 1)
@@ -409,6 +409,106 @@ var field3Collision = [
 	]
 ];
 
+var field4 = [
+	[	//first row
+		block(0, "wood"), 
+		block(0, "water"), 
+		block(0, "water"), 
+		block(0, "water"), 
+		block(0, "water")
+	],
+
+	[	//second row
+		block(1, "wood"), 
+		block(1, "wood"),
+		block(1, "wood"), 
+		block(1, "wood"), 
+		block(1, "water")
+	],
+
+	[	//third row
+		block(2, "water"), 
+		block(2, "wood"), 
+		block(2, "water"), 
+		block(2, "water"), 
+		block(2, "water")
+	],
+
+	[	//fourth row
+		block(3, "wood"), 
+		block(3, "wood"), 
+		block(3, "wood"), 
+		block(3, "wood"), 
+		block(3, "wood")
+	],
+
+	[	//fifth row
+		block(4, "water"), 
+		block(4, "water"), 
+		block(4, "wood"), 
+		block(4, "water"), 
+		block(4, "water")
+	],
+
+	[	//sixth row
+		block(5, "water"), 
+		block(5, "water"), 
+		block(5, "wood"), 
+		block(5, "water"), 
+		block(5, "water")
+	]
+];
+
+var field4Collision = [
+	[	//first row
+		1, 
+		3, 
+		3, 
+		3, 
+		3
+	],
+
+	[	//second row
+		1, 
+		1,
+		1, 
+		1, 
+		3
+	],
+
+	[	//third row
+		3, 
+		1, 
+		3, 
+		3, 
+		3
+	],
+
+	[	//fourth row
+		1, 
+		1, 
+		1, 
+		1, 
+		1
+	],
+
+	[	//fifth row
+		3, 
+		3, 
+		1, 
+		3, 
+		3
+	],
+
+	[	//sixth row
+		3, 
+		3, 
+		0, 
+		3, 
+		3
+	]
+];
+
 function level1()
 {	
 	level = 1;
@@ -438,6 +538,7 @@ function level2()
 	drawPatrol(0, 2);
 	startPatrol();
 	drawField(field2);
+	console.log("TEST2")
 	fieldCollision = field2Collision;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
@@ -456,10 +557,33 @@ function level3()
 	drawPlayer(leftLocation, topLocation);
 	drawToken(3, 1, "key");
 	drawToken(2, 5, "star");
-	drawField(field3);
+	clearInterval(path);
 	drawPatrol(0, 3);
 	startPatrol();
+	drawField(field3);
+	console.log("TEST3")
 	fieldCollision = field3Collision;
+	player = document.getElementById("player");
+	key = document.getElementById("key");
+	star = document.getElementById("star");
+	bug = document.getElementById("bug");
+}
+
+function level4()
+{
+	level = 4;
+	container.innerHTML = '';
+	playerLayer.innerHTML = '';
+	tokens.innerHTML = '';
+	leftLocation = 0;
+	topLocation = 0;
+	drawPlayer(leftLocation, topLocation);
+	drawToken(3, 1, "key");
+	drawToken(0, 4, "star");
+	console.log("TEST4")
+	clearInterval(path);
+	drawField(field4);
+	fieldCollision = field4Collision;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
 	star = document.getElementById("star");
@@ -560,7 +684,7 @@ function startPatrol()
 		var outX = bugLeftLocation * 101;
 		bug.style.left = outX+"px";
 		checkTokenCollision();
-	}, 500)
+	}, 500);
 }
 
 function checkTokenCollision()
@@ -579,26 +703,26 @@ function checkTokenCollision()
 	}
 	else if(topLocation == starTopLocation && leftLocation == starLeftLocation)
 	{
+		topLocation = 0;
+		leftLocation = 0;
 		star.style.left = "60px";
 		star.style.top = "-100px";	
 		star.style.width = "400px";
 		star.style.height = "600px";
 		star.style.transform = "rotate(360deg)";
 		setTimeout(function(){
-			if(level == 1)
+			switch(level)
 			{
-				level2();
-			}
-			else if(level == 2)
-			{
-				clearInterval(path);
-				level3();
-			}
-			else if(level == 3)
-			{
-				clearInterval(path);
-				level3();
-			}
+				case 1:
+					level2();
+					break;
+				case 2: 
+					level3();
+					break;
+				case 3:
+					level4();
+					break;
+			}		
 		}, 2500);		
 	}
 }
@@ -610,7 +734,6 @@ function block(row, type)
 	var stone = '<img src="images/Stone Block.png" alt="Stone Block" class="stone"';
 	var water = '<img src="images/Water Block.png" alt="Water Block" class="water"';
 	var wood = '<img src="images/Wood Block.png" alt="Wood Block" class="wood"';
-
 
 	var out;
 	
