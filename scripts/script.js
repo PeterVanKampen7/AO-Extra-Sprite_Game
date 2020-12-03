@@ -433,6 +433,10 @@ function checkTokenCollision()
 	if(topLocation == keyTopLocation && leftLocation == keyLeftLocation)
 	{
 		fieldCollision[starTopLocation][starLeftLocation] = 1;
+		if(level == 3)
+		{
+			fieldCollision[starTopLocation][starLeftLocation] = 2;
+		}
 		drawField();
 		key.style.width = "50px";
 		key.style.height = "80px";
