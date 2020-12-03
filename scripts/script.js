@@ -19,7 +19,7 @@ document.addEventListener("keyup", function(event){
 	if(gameState == 0)
 	{
 		document.getElementById("startScreen").style.display = "none";
-		level2();
+		level1();
 		gameState++;
 	}
 	else if(gameState == 1)
@@ -538,7 +538,6 @@ function level2()
 	drawPatrol(0, 2);
 	startPatrol();
 	drawField(field2);
-	console.log("TEST2")
 	fieldCollision = field2Collision;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
@@ -557,11 +556,9 @@ function level3()
 	drawPlayer(leftLocation, topLocation);
 	drawToken(3, 1, "key");
 	drawToken(2, 5, "star");
-	clearInterval(path);
 	drawPatrol(0, 3);
 	startPatrol();
 	drawField(field3);
-	console.log("TEST3")
 	fieldCollision = field3Collision;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
@@ -580,8 +577,6 @@ function level4()
 	drawPlayer(leftLocation, topLocation);
 	drawToken(3, 1, "key");
 	drawToken(0, 4, "star");
-	console.log("TEST4")
-	clearInterval(path);
 	drawField(field4);
 	fieldCollision = field4Collision;
 	player = document.getElementById("player");
@@ -717,9 +712,11 @@ function checkTokenCollision()
 					level2();
 					break;
 				case 2: 
+					clearInterval(path);
 					level3();
 					break;
 				case 3:
+					clearInterval(path);
 					level4();
 					break;
 			}		
