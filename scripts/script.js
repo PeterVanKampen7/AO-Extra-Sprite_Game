@@ -1,5 +1,6 @@
 var topLocation = 0;
 var leftLocation = 0;
+var field;
 var fieldCollision;
 var level;
 var player;
@@ -12,8 +13,12 @@ var starTopLocation;
 var starLeftLocation;
 var bugTopLocation;
 var bugLeftLocation;
+var heartTopLocation;
+var heartLeftLocation;
 var gameState = 0;
 var path;
+var hearts = 0;
+var heartArray = [];
 
 document.addEventListener("keyup", function(event){
 	if(gameState == 0)
@@ -28,7 +33,7 @@ document.addEventListener("keyup", function(event){
 		{
 			if(topLocation != 0)
 			{
-				if(fieldCollision[topLocation-1][leftLocation] == 1)
+				if(fieldCollision[topLocation-1][leftLocation] == 1 ||fieldCollision[topLocation-1][leftLocation] == 2)
 				{
 					topLocation -= 1;
 					updatePlayer();
@@ -46,7 +51,7 @@ document.addEventListener("keyup", function(event){
 		{
 			if(leftLocation != 0)
 			{
-				if(fieldCollision[topLocation][leftLocation-1] == 1)
+				if(fieldCollision[topLocation][leftLocation-1] == 1 ||fieldCollision[topLocation][leftLocation-1] == 2)
 				{
 					leftLocation -= 1;
 					updatePlayer();
@@ -64,7 +69,7 @@ document.addEventListener("keyup", function(event){
 		{
 			if(topLocation != 5)
 			{
-				if(fieldCollision[topLocation+1][leftLocation] == 1)
+				if(fieldCollision[topLocation+1][leftLocation] == 1 ||fieldCollision[topLocation+1][leftLocation] == 2)
 				{
 					topLocation += 1;
 					updatePlayer();
@@ -82,7 +87,7 @@ document.addEventListener("keyup", function(event){
 		{
 			if(leftLocation != 4)
 			{
-				if(fieldCollision[topLocation][leftLocation+1] == 1)
+				if(fieldCollision[topLocation][leftLocation+1] == 1 ||fieldCollision[topLocation][leftLocation+1] == 2)
 				{
 					leftLocation += 1;
 					updatePlayer();
@@ -111,401 +116,105 @@ var tokens = document.getElementById("tokenLayer");
 
 var field1 = [
 	[	//first row
-		block(0, "grass"), 
-		block(0, "stone"), 
-		block(0, "grass"), 
-		block(0, "grass"), 
-		block(0, "grass")
+		0, 1, 0, 0, 0
 	],
 
 	[	//second row
-		block(1, "grass"), 
-		block(1, "stone"),
-		block(1, "stone"), 
-		block(1, "stone"), 
-		block(1, "grass")
+		0, 1, 1, 1, 0
 	],
 
 	[	//third row
-		block(2, "grass"), 
-		block(2, "grass"), 
-		block(2, "grass"), 
-		block(2, "stone"), 
-		block(2, "grass")
+		0, 0, 0, 1, 0
 	],
 
 	[	//fourth row
-		block(3, "stone"), 
-		block(3, "stone"), 
-		block(3, "stone"), 
-		block(3, "stone"), 
-		block(3, "grass")
+		1, 1, 1, 1, 0
 	],
 
 	[	//fifth row
-		block(4, "stone"), 
-		block(4, "grass"), 
-		block(4, "grass"), 
-		block(4, "stone"), 
-		block(4, "grass")
+		1, 0, 0, 1, 0
 	],
 
 	[	//sixth row
-		block(5, "stone"), 
-		block(5, "grass"), 
-		block(5, "grass"), 
-		block(5, "grass"), 
-		block(5, "grass")
-	]
-];
-
-var field1Collision = [
-	[	//first row
-		0, 
-		1, 
-		0, 
-		0, 
-		0
-	],
-
-	[	//second row
-		0, 
-		1,
-		1, 
-		1, 
-		0
-	],
-
-	[	//third row
-		0, 
-		0, 
-		0, 
-		1, 
-		0
-	],
-
-	[	//fourth row
-		1, 
-		1, 
-		1, 
-		1, 
-		0
-	],
-
-	[	//fifth row
-		1, 
-		0, 
-		0, 
-		1, 
-		0
-	],
-
-	[	//sixth row
-		0, 
-		0, 
-		0, 
-		0, 
-		0
+		0, 0, 0, 0, 0
 	]
 ];
 
 var field2 = [
 	[	//first row
-		block(0, "grass"), 
-		block(0, "stone"), 
-		block(0, "grass"), 
-		block(0, "grass"), 
-		block(0, "grass")
+		0, 1, 0, 0, 0
 	],
 
 	[	//second row
-		block(1, "grass"), 
-		block(1, "stone"),
-		block(1, "grass"), 
-		block(1, "stone"), 
-		block(1, "grass")
+		0, 1, 0, 1, 0
 	],
 
 	[	//third row
-		block(2, "stone"), 
-		block(2, "stone"), 
-		block(2, "stone"), 
-		block(2, "stone"), 
-		block(2, "stone")
+		1, 1, 1, 1, 1
 	],
 
 	[	//fourth row
-		block(3, "grass"), 
-		block(3, "grass"), 
-		block(3, "stone"), 
-		block(3, "grass"), 
-		block(3, "stone")
+		0, 0, 1, 0, 1
 	],
 
 	[	//fifth row
-		block(4, "stone"), 
-		block(4, "grass"), 
-		block(4, "grass"), 
-		block(4, "grass"), 
-		block(4, "stone")
+		0, 0, 0, 0, 1
 	],
 
 	[	//sixth row
-		block(5, "stone"), 
-		block(5, "stone"), 
-		block(5, "stone"), 
-		block(5, "stone"), 
-		block(5, "stone")
-	]
-];
-
-var field2Collision = [
-	[	//first row
-		0, 
-		1, 
-		0, 
-		0, 
-		0
-	],
-
-	[	//second row
-		0, 
-		1,
-		0, 
-		1, 
-		0
-	],
-
-	[	//third row
-		1, 
-		1, 
-		1, 
-		1, 
-		1
-	],
-
-	[	//fourth row
-		0, 
-		0, 
-		1, 
-		0, 
-		1
-	],
-
-	[	//fifth row
-		0, 
-		0, 
-		0, 
-		0, 
-		1
-	],
-
-	[	//sixth row
-		1, 
-		1, 
-		1, 
-		1, 
-		1
+		1, 1, 1, 1, 1
 	]
 ];
 
 var field3 = [
 	[	//first row
-		block(0, "wood"), 
-		block(0, "water"), 
-		block(0, "water"), 
-		block(0, "water"), 
-		block(0, "water")
+		2, 3, 3, 3, 3
 	],
 
 	[	//second row
-		block(1, "wood"), 
-		block(1, "wood"),
-		block(1, "wood"), 
-		block(1, "wood"), 
-		block(1, "water")
+		2, 2, 2, 2, 3
 	],
 
 	[	//third row
-		block(2, "water"), 
-		block(2, "wood"), 
-		block(2, "water"), 
-		block(2, "water"), 
-		block(2, "water")
+		3, 2, 3, 3, 3
 	],
 
 	[	//fourth row
-		block(3, "wood"), 
-		block(3, "wood"), 
-		block(3, "wood"), 
-		block(3, "wood"), 
-		block(3, "wood")
+		2, 2, 2, 2, 2
 	],
 
 	[	//fifth row
-		block(4, "water"), 
-		block(4, "water"), 
-		block(4, "wood"), 
-		block(4, "water"), 
-		block(4, "water")
+		3, 3, 2, 3, 3
 	],
 
 	[	//sixth row
-		block(5, "water"), 
-		block(5, "water"), 
-		block(5, "wood"), 
-		block(5, "water"), 
-		block(5, "water")
-	]
-];
-
-var field3Collision = [
-	[	//first row
-		1, 
-		3, 
-		3, 
-		3, 
-		3
-	],
-
-	[	//second row
-		1, 
-		1,
-		1, 
-		1, 
-		3
-	],
-
-	[	//third row
-		3, 
-		1, 
-		3, 
-		3, 
-		3
-	],
-
-	[	//fourth row
-		1, 
-		1, 
-		1, 
-		1, 
-		1
-	],
-
-	[	//fifth row
-		3, 
-		3, 
-		1, 
-		3, 
-		3
-	],
-
-	[	//sixth row
-		3, 
-		3, 
-		0, 
-		3, 
-		3
+		3, 3, 3, 3, 3
 	]
 ];
 
 var field4 = [
 	[	//first row
-		block(0, "wood"), 
-		block(0, "water"), 
-		block(0, "water"), 
-		block(0, "water"), 
-		block(0, "water")
+		0, 0, 1, 0, 0
 	],
 
 	[	//second row
-		block(1, "wood"), 
-		block(1, "wood"),
-		block(1, "wood"), 
-		block(1, "wood"), 
-		block(1, "water")
+		0, 0, 1, 1, 0
 	],
 
 	[	//third row
-		block(2, "water"), 
-		block(2, "wood"), 
-		block(2, "water"), 
-		block(2, "water"), 
-		block(2, "water")
+		0, 0, 1, 0, 0
 	],
 
 	[	//fourth row
-		block(3, "wood"), 
-		block(3, "wood"), 
-		block(3, "wood"), 
-		block(3, "wood"), 
-		block(3, "wood")
+		0, 1, 1, 0, 0
 	],
 
 	[	//fifth row
-		block(4, "water"), 
-		block(4, "water"), 
-		block(4, "wood"), 
-		block(4, "water"), 
-		block(4, "water")
+		0, 0, 1, 0, 0
 	],
 
 	[	//sixth row
-		block(5, "water"), 
-		block(5, "water"), 
-		block(5, "wood"), 
-		block(5, "water"), 
-		block(5, "water")
-	]
-];
-
-var field4Collision = [
-	[	//first row
-		1, 
-		3, 
-		3, 
-		3, 
-		3
-	],
-
-	[	//second row
-		1, 
-		1,
-		1, 
-		1, 
-		3
-	],
-
-	[	//third row
-		3, 
-		1, 
-		3, 
-		3, 
-		3
-	],
-
-	[	//fourth row
-		1, 
-		1, 
-		1, 
-		1, 
-		1
-	],
-
-	[	//fifth row
-		3, 
-		3, 
-		1, 
-		3, 
-		3
-	],
-
-	[	//sixth row
-		3, 
-		3, 
-		0, 
-		3, 
-		3
+		1, 1, 1, 1, 0
 	]
 ];
 
@@ -517,8 +226,9 @@ function level1()
 	drawPlayer(leftLocation, topLocation);
 	drawToken(3, 4, "key");
 	drawToken(0, 5, "star");
-	drawField(field1);
-	fieldCollision = field1Collision;
+	field = field1;
+	drawField();
+	fieldCollision = field;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
 	star = document.getElementById("star");	
@@ -537,8 +247,9 @@ function level2()
 	drawToken(0, 4, "star");
 	drawPatrol(0, 2);
 	startPatrol();
-	drawField(field2);
-	fieldCollision = field2Collision;
+	field = field2;
+	drawField();
+	fieldCollision = field;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
 	star = document.getElementById("star");
@@ -558,8 +269,9 @@ function level3()
 	drawToken(2, 5, "star");
 	drawPatrol(0, 3);
 	startPatrol();
-	drawField(field3);
-	fieldCollision = field3Collision;
+	field = field3;
+	drawField();
+	fieldCollision = field;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
 	star = document.getElementById("star");
@@ -572,26 +284,48 @@ function level4()
 	container.innerHTML = '';
 	playerLayer.innerHTML = '';
 	tokens.innerHTML = '';
-	leftLocation = 0;
+	leftLocation = 2;
 	topLocation = 0;
 	drawPlayer(leftLocation, topLocation);
 	drawToken(3, 1, "key");
-	drawToken(0, 4, "star");
-	drawField(field4);
-	fieldCollision = field4Collision;
+	drawToken(4, 5, "star");
+	drawPatrol(0, 5);
+	startPatrol();
+	drawToken(1, 3, "heart");
+	field = field4;
+	drawField();
+	fieldCollision = field;
 	player = document.getElementById("player");
 	key = document.getElementById("key");
 	star = document.getElementById("star");
 	bug = document.getElementById("bug");
 }
 
-function drawField(field)
+function drawField()
 {
+	container.innerHTML = "";
 	for (var i = 0; i < field.length; i++) 
 	{
 		for (var j = 0; j < field[i].length; j++) 
 		{
-			container.innerHTML += field[i][j];
+			//container.innerHTML += field[i][j];
+			if(field[i][j] == 0)
+			{
+				console.log("TEST")
+				container.innerHTML += block(i, "grass");
+			}
+			else if(field[i][j] == 1)
+			{
+				container.innerHTML += block(i, "stone");
+			}
+			else if(field[i][j] == 2)
+			{
+				container.innerHTML += block(i, "wood");
+			}
+			else if(field[i][j] == 3)
+			{
+				container.innerHTML += block(i, "water");
+			}
 		}	
 	}
 }
@@ -627,17 +361,29 @@ function drawToken(x, y, token)
 		out = '<img src="images/Key.png" alt="Key" class="token" id="key"';
 		keyTopLocation = y;
 		keyLeftLocation = x;
+		out += 'style="top:'+outY+'px; ';
+		out += 'left: '+outX+'px">';
+		tokens.innerHTML += out;
 	}
 	else if(token === "star")
 	{
 		out = '<img src="images/Star.png" alt="Star" class="token" id="star"';
 		starTopLocation = y;
 		starLeftLocation = x;
+		out += 'style="top:'+outY+'px; ';
+		out += 'left: '+outX+'px">';
+		tokens.innerHTML += out;
 	}
-
-	out += 'style="top:'+outY+'px; ';
-	out += 'left: '+outX+'px">';
-	tokens.innerHTML += out;
+	else if(token == "heart")
+	{
+		out = '<img src="images/Heart.png" alt="Heart" class="token" id="heart"';
+		heartTopLocation = y;
+		heartLeftLocation = x;
+		out += 'style="top:'+outY+'px; ';
+		out += 'left: '+outX+'px">';
+		tokens.innerHTML += out;
+		heartArray[heartArray.length] = document.getElementById("heart");
+	}
 }
 
 function drawPatrol(x, y)
@@ -687,6 +433,7 @@ function checkTokenCollision()
 	if(topLocation == keyTopLocation && leftLocation == keyLeftLocation)
 	{
 		fieldCollision[starTopLocation][starLeftLocation] = 1;
+		drawField();
 		key.style.width = "50px";
 		key.style.height = "80px";
 		key.style.left = "0px";
@@ -695,6 +442,19 @@ function checkTokenCollision()
 	else if(topLocation == bugTopLocation && leftLocation == bugLeftLocation)
 	{
 		death();
+	}
+	else if(topLocation == heartTopLocation && leftLocation == heartLeftLocation)
+	{
+		heartTopLocation = -1;
+		heartLeftLocation = -1;
+		console.log("TEST "+heartArray[heartArray.length-1].style.width);
+		heartArray[heartArray.length-1].style.width = "50px";
+		heartArray[heartArray.length-1].style.height = "80px";
+		var temp = 450 - ((heartArray.length - 1) * 50);
+		heartArray[heartArray.length-1].style.left = temp+"px";
+		heartArray[heartArray.length-1].style.top = "-80px";
+		heartArray[heartArray.length-1].style.paddingTop = "0px";
+		hearts++;
 	}
 	else if(topLocation == starTopLocation && leftLocation == starLeftLocation)
 	{
@@ -719,6 +479,9 @@ function checkTokenCollision()
 					clearInterval(path);
 					level4();
 					break;
+				case 4: 
+					clearInterval(path);
+					level5();
 			}		
 		}, 2500);		
 	}
@@ -736,6 +499,7 @@ function block(row, type)
 	
 	if(type == "grass")
 	{
+		console.log("TEST@")
 		out = grass + 'style="top:'+((row*-90)-45)+'px">';
 	}
 	else if(type == "dirt")
@@ -760,7 +524,16 @@ function block(row, type)
 
 function death()
 {
-	gameState++;
-	clearInterval(path);
-	document.getElementById("gameOver").style.display = "block";
+	if(hearts == 0)
+	{
+		gameState++;
+		clearInterval(path);
+		document.getElementById("gameOver").style.display = "block";
+	}
+	else
+	{
+		hearts--;
+		heartArray[heartArray.length-1].style.display = "none";
+		heartArray[heartArray.length-1] = null;
+	}
 }

@@ -122,6 +122,16 @@ h1
 	transition: ease 0.5s;
 }
 
+#tokenLayer > #heart
+{
+	position: absolute;
+	transition: ease 2s;
+	height: 150px;
+	width: 90px;
+	padding-top: 25px;
+	padding-left: 7px;
+}
+
 #gameOver
 {
 	display: none;
