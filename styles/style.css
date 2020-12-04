@@ -122,7 +122,17 @@ h1
 	transition: ease 0.5s;
 }
 
-#tokenLayer > #heart
+#heartsLayer
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 2;
+	width: 506px;
+	height: 520px;
+}
+
+#heartsLayer > img
 {
 	position: absolute;
 	transition: ease 2s;

@@ -24,7 +24,7 @@ document.addEventListener("keyup", function(event){
 	if(gameState == 0)
 	{
 		document.getElementById("startScreen").style.display = "none";
-		level1();
+		level4();
 		gameState++;
 	}
 	else if(gameState == 1)
@@ -113,6 +113,7 @@ document.addEventListener("keyup", function(event){
 var container = document.getElementById("fieldLayer");
 var playerLayer = document.getElementById("playerLayer");
 var tokens = document.getElementById("tokenLayer");
+var heartsLayer = document.getElementById("heartsLayer");
 
 var field1 = [
 	[	//first row
@@ -193,6 +194,32 @@ var field3 = [
 ];
 
 var field4 = [
+	[	//first row
+		0, 0, 1, 0, 0
+	],
+
+	[	//second row
+		0, 0, 1, 1, 0
+	],
+
+	[	//third row
+		0, 0, 1, 0, 0
+	],
+
+	[	//fourth row
+		0, 1, 1, 0, 0
+	],
+
+	[	//fifth row
+		0, 0, 1, 0, 0
+	],
+
+	[	//sixth row
+		1, 1, 1, 1, 0
+	]
+];
+
+var field5 = [
 	[	//first row
 		0, 0, 1, 0, 0
 	],
@@ -301,6 +328,29 @@ function level4()
 	bug = document.getElementById("bug");
 }
 
+function level5()
+{
+	level = 5;
+	container.innerHTML = '';
+	playerLayer.innerHTML = '';
+	tokens.innerHTML = '';
+	leftLocation = 2;
+	topLocation = 0;
+	drawPlayer(leftLocation, topLocation);
+	drawToken(3, 1, "key");
+	drawToken(4, 5, "star");
+	drawPatrol(0, 5);
+	startPatrol();
+	drawToken(1, 3, "heart");
+	field = field4;
+	drawField();
+	fieldCollision = field;
+	player = document.getElementById("player");
+	key = document.getElementById("key");
+	star = document.getElementById("star");
+	bug = document.getElementById("bug");
+}
+
 function drawField()
 {
 	container.innerHTML = "";
@@ -311,7 +361,6 @@ function drawField()
 			//container.innerHTML += field[i][j];
 			if(field[i][j] == 0)
 			{
-				console.log("TEST")
 				container.innerHTML += block(i, "grass");
 			}
 			else if(field[i][j] == 1)
@@ -376,13 +425,13 @@ function drawToken(x, y, token)
 	}
 	else if(token == "heart")
 	{
-		out = '<img src="images/Heart.png" alt="Heart" class="token" id="heart"';
+		out = '<img src="images/Heart.png" alt="Heart" class="token" id="heart'+hearts+'"';
 		heartTopLocation = y;
 		heartLeftLocation = x;
 		out += 'style="top:'+outY+'px; ';
 		out += 'left: '+outX+'px">';
-		tokens.innerHTML += out;
-		heartArray[heartArray.length] = document.getElementById("heart");
+		heartsLayer.innerHTML += out;
+		heartArray[heartArray.length] = document.getElementById("heart"+hearts);
 	}
 }
 
@@ -451,10 +500,9 @@ function checkTokenCollision()
 	{
 		heartTopLocation = -1;
 		heartLeftLocation = -1;
-		console.log("TEST "+heartArray[heartArray.length-1].style.width);
 		heartArray[heartArray.length-1].style.width = "50px";
 		heartArray[heartArray.length-1].style.height = "80px";
-		var temp = 450 - ((heartArray.length - 1) * 50);
+		var temp = 450 - ((heartArray.length - 1) * 60);
 		heartArray[heartArray.length-1].style.left = temp+"px";
 		heartArray[heartArray.length-1].style.top = "-80px";
 		heartArray[heartArray.length-1].style.paddingTop = "0px";
@@ -537,7 +585,6 @@ function death()
 	else
 	{
 		hearts--;
-		heartArray[heartArray.length-1].style.display = "none";
-		heartArray[heartArray.length-1] = null;
+		heartArray.pop().style.display = "none";
 	}
 }
