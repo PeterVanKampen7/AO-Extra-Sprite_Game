@@ -342,7 +342,7 @@ function level5()
 	drawPatrol(0, 5);
 	startPatrol();
 	drawToken(1, 3, "heart");
-	field = field4;
+	field = field5;
 	drawField();
 	fieldCollision = field;
 	player = document.getElementById("player");
@@ -551,7 +551,6 @@ function block(row, type)
 	
 	if(type == "grass")
 	{
-		console.log("TEST@")
 		out = grass + 'style="top:'+((row*-90)-45)+'px">';
 	}
 	else if(type == "dirt")
@@ -583,8 +582,9 @@ function death()
 		document.getElementById("gameOver").style.display = "block";
 	}
 	else
-	{
+	{		
+		document.getElementById(heartArray[hearts-1].id).style.display = "none";
+		heartArray.pop();
 		hearts--;
-		heartArray.pop().style.display = "none";
 	}
 }
